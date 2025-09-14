@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rubik's Cube Solver</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+  .cube { display: grid; grid-template-columns: repeat(3, 50px); grid-gap: 2px; margin: 20px auto; }
+  .cell { width: 50px; height: 50px; border: 1px solid #333; cursor: pointer; }
+  .controls { margin: 20px; }
+  button { padding: 10px 20px; font-size: 16px; }
+</style>
+</head>
+<body>
+
+<h1>Rubik's Cube Solver</h1>
+
+<div id="cube-container"></div>
+
+<div class="controls">
+  <button onclick="solveCube()">Solve Cube</button>
+</div>
+
+<div id="solution"></div>
+
+<script>
+// Define cube colors
+const colors = ['white','yellow','red','orange','blue','green'];
+const faces = ['U','D','F','B','L','R'];
+
+// Initialize cube: 6 faces, 3x3 each
+let cube = {};
+faces.forEach(face => {
+  cube[face] = Array(9).fill(colors[faces.indexOf(face)]);
+});
+
+// Render cube as 2D grids
+function renderCube() {
+  const container = document.getElementById('cube-container');
+  container.innerHTML = '';
+  faces.forEach(face => {
+    const div = document.createElement('div');
+    div.innerHTML = `<h3>${face}</h3>`;
+    const grid = document.createElement('div');
+    grid.className = 'cube';
+    cube[face].forEach((color, i) => {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      cell.style.background = color;
+      cell.onclick = () => {
+        let nextColor = prompt('Enter color (white, yellow, red, orange, blue, green):', color);
+        if(colors.includes(nextColor)) {
+          cube[face][i] = nextColor;
+          renderCube();
+        } else alert('Invalid color');
+      }
+      grid.appendChild(cell);
+    });
+    div.appendChild(grid);
+    container.appendChild(div);
+  });
+}
+
+// Simple solver placeholder (returns mock moves)
+function solveCube() {
+  // Real solving algorithm would be implemented here
+  const solutionSteps = ["R", "U", "R'", "U'", "F", "R", "F'"];
+  document.getElementById('solution').innerHTML = `<h2>Solution:</h2><p>${solutionSteps.join(' ')}</p>`;
+}
+
+renderCube();
+</script>
+
+</body>
+</html>
